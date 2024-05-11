@@ -5,6 +5,6 @@ module com.jmmarao.workshopjavafxjdbc {
 
     opens com.jmmarao.workshopjavafxjdbc to javafx.fxml;
     exports com.jmmarao.workshopjavafxjdbc;
-    opens com.jmmarao.workshopjavafxjdbc.controller to javafx.fxml;
-    exports com.jmmarao.workshopjavafxjdbc.controller;
+    opens com.jmmarao.workshopjavafxjdbc.controllers to javafx.fxml;
+    exports com.jmmarao.workshopjavafxjdbc.controllers;
 }

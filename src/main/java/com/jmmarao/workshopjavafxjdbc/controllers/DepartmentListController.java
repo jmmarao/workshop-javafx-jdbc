@@ -1,7 +1,7 @@
-package com.jmmarao.workshopjavafxjdbc.controller;
+package com.jmmarao.workshopjavafxjdbc.controllers;
 
 import com.jmmarao.workshopjavafxjdbc.MainApplication;
-import com.jmmarao.workshopjavafxjdbc.model.Department;
+import com.jmmarao.workshopjavafxjdbc.models.Department;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;

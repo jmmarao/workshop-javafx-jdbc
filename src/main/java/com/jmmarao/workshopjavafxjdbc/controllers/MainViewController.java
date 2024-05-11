@@ -1,4 +1,4 @@
-package com.jmmarao.workshopjavafxjdbc.controller;
+package com.jmmarao.workshopjavafxjdbc.controllers;
 
 import com.jmmarao.workshopjavafxjdbc.MainApplication;
 import com.jmmarao.workshopjavafxjdbc.utils.Alerts;

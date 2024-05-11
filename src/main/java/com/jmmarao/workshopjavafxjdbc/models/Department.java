@@ -1,4 +1,4 @@
-package com.jmmarao.workshopjavafxjdbc.model;
+package com.jmmarao.workshopjavafxjdbc.models;
 
 import java.io.Serial;
 import java.io.Serializable;
