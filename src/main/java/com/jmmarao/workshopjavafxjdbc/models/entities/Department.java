@@ -1,12 +1,13 @@
-package com.jmmarao.workshopjavafxjdbc.models;
+package com.jmmarao.workshopjavafxjdbc.models.entities;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.Objects;
 
 public class Department implements Serializable {
 
     @Serial
-    private static final long serialVersionUID = 2499088158804714143L;
+    private static final long serialVersionUID = -8506163918853063146L;
 
     private Integer id;
     private String name;
@@ -36,10 +37,20 @@ public class Department implements Serializable {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Department that = (Department) o;
+        return Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
+
+    @Override
     public String toString() {
-        return "Department{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                '}';
+        return "Department #" + id + "\n\tName: " + name;
     }
 }

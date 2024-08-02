@@ -1,7 +1,7 @@
 package com.jmmarao.workshopjavafxjdbc.controllers;
 
 import com.jmmarao.workshopjavafxjdbc.MainApplication;
-import com.jmmarao.workshopjavafxjdbc.models.Department;
+import com.jmmarao.workshopjavafxjdbc.models.entities.Department;
 import com.jmmarao.workshopjavafxjdbc.services.DepartmentService;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
