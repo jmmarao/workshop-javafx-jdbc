@@ -1,6 +1,7 @@
 package com.jmmarao.workshopjavafxjdbc.controllers;
 
 import com.jmmarao.workshopjavafxjdbc.MainApplication;
+import com.jmmarao.workshopjavafxjdbc.listeners.DataChangeListener;
 import com.jmmarao.workshopjavafxjdbc.models.entities.Department;
 import com.jmmarao.workshopjavafxjdbc.services.DepartmentService;
 import com.jmmarao.workshopjavafxjdbc.utils.Alerts;
@@ -26,7 +27,7 @@ import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
 
-public class DepartmentListController implements Initializable {
+public class DepartmentListController implements Initializable, DataChangeListener {
 
     private DepartmentService departmentService;
 
@@ -61,6 +62,11 @@ public class DepartmentListController implements Initializable {
         this.departmentService = departmentService;
     }
 
+    @Override
+    public void onDataChanged() {
+        updateDepartmentTableView();
+    }
+
     public void updateDepartmentTableView() {
         if (departmentService == null) {
             throw new IllegalStateException("Department service null");
@@ -87,6 +93,7 @@ public class DepartmentListController implements Initializable {
             DepartmentFormController formController = loader.getController();
             formController.setDepartment(department);
             formController.setDepartmentService(new DepartmentService());
+            formController.subscribeDataChangeListener(this);
             formController.updateFormData();
 
             Stage dialogStage = new Stage();

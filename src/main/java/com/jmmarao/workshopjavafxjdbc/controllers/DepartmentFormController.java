@@ -1,6 +1,7 @@
 package com.jmmarao.workshopjavafxjdbc.controllers;
 
 import com.jmmarao.workshopjavafxjdbc.exceptions.DbException;
+import com.jmmarao.workshopjavafxjdbc.listeners.DataChangeListener;
 import com.jmmarao.workshopjavafxjdbc.models.entities.Department;
 import com.jmmarao.workshopjavafxjdbc.services.DepartmentService;
 import com.jmmarao.workshopjavafxjdbc.utils.Alerts;
@@ -16,6 +17,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 
 public class DepartmentFormController implements Initializable {
@@ -23,6 +26,8 @@ public class DepartmentFormController implements Initializable {
     private Department department;
 
     private DepartmentService departmentService;
+
+    private List<DataChangeListener> dataChangeListeners = new ArrayList<>();
 
     @FXML
     private TextField txtId;
@@ -49,6 +54,7 @@ public class DepartmentFormController implements Initializable {
         try {
             department = getFormData();
             departmentService.saveOrUpdate(department);
+            notifyDataChangeListeners();
             StageUtils.currentStage(event).close();
         } catch (DbException e) {
             Alerts.showAlert("Error saving department", null, e.getMessage(), Alert.AlertType.ERROR);
@@ -71,6 +77,16 @@ public class DepartmentFormController implements Initializable {
 
         txtId.setText(String.valueOf(department.getId()));
         txtName.setText(String.valueOf(department.getName()));
+    }
+
+    public void subscribeDataChangeListener(DataChangeListener listener) {
+        dataChangeListeners.add(listener);
+    }
+
+    private void notifyDataChangeListeners() {
+        for (DataChangeListener listener : dataChangeListeners) {
+            listener.onDataChanged();
+        }
     }
 
     private void initializeNodes() {
