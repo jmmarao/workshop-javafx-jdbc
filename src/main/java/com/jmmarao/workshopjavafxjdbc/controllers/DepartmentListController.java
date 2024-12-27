@@ -6,6 +6,7 @@ import com.jmmarao.workshopjavafxjdbc.models.entities.Department;
 import com.jmmarao.workshopjavafxjdbc.services.DepartmentService;
 import com.jmmarao.workshopjavafxjdbc.utils.Alerts;
 import com.jmmarao.workshopjavafxjdbc.utils.StageUtils;
+import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -13,10 +14,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
@@ -43,6 +41,9 @@ public class DepartmentListController implements Initializable, DataChangeListen
     private TableColumn<Department, String> tableColumnName;
 
     @FXML
+    private TableColumn<Department, Department> tableColumnEdit;
+
+    @FXML
     private Button btNew;
 
     @FXML
@@ -67,6 +68,27 @@ public class DepartmentListController implements Initializable, DataChangeListen
         updateDepartmentTableView();
     }
 
+    private void initEditButton() {
+        tableColumnEdit.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue()));
+        tableColumnEdit.setCellFactory(param -> new TableCell<Department, Department>() {
+            private final Button button = new Button("edit");
+
+            @Override
+            protected void updateItem(Department item, boolean empty) {
+                super.updateItem(item, empty);
+
+                if (item == null) {
+                    setGraphic(null);
+                    return;
+                }
+
+                setGraphic(button);
+                button.setOnAction(event ->
+                        createDialogForm(item, "/com/jmmarao/workshopjavafxjdbc/DepartmentForm.fxml", StageUtils.currentStage(event)));
+            }
+        });
+    }
+
     public void updateDepartmentTableView() {
         if (departmentService == null) {
             throw new IllegalStateException("Department service null");
@@ -75,6 +97,7 @@ public class DepartmentListController implements Initializable, DataChangeListen
         List<Department> departmentList = departmentService.findAll();
         departmentObservableList = FXCollections.observableArrayList(departmentList);
         departmentTableView.setItems(departmentObservableList);
+        initEditButton();
     }
 
     private void initializeNodes() {
@@ -107,4 +130,5 @@ public class DepartmentListController implements Initializable, DataChangeListen
             Alerts.showAlert("IO Exception", "Error loading view", e.getMessage(), Alert.AlertType.ERROR);
         }
     }
+
 }
