@@ -8,6 +8,7 @@ import com.jmmarao.workshopjavafxjdbc.models.entities.Seller;
 import com.jmmarao.workshopjavafxjdbc.services.SellerService;
 import com.jmmarao.workshopjavafxjdbc.utils.Alerts;
 import com.jmmarao.workshopjavafxjdbc.utils.StageUtils;
+import com.jmmarao.workshopjavafxjdbc.utils.TableColumnUtils;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -24,6 +25,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 
 import java.net.URL;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -42,6 +44,15 @@ public class SellerListController implements Initializable, DataChangeListener {
 
     @FXML
     private TableColumn<Seller, String> tableColumnName;
+
+    @FXML
+    private TableColumn<Seller, String> tableColumnEmail;
+
+    @FXML
+    private TableColumn<Seller, Date> tableColumnBirthDate;
+
+    @FXML
+    private TableColumn<Seller, Double> tableColumnBaseSalary;
 
     @FXML
     private TableColumn<Seller, Seller> tableColumnEdit;
@@ -131,6 +142,13 @@ public class SellerListController implements Initializable, DataChangeListener {
     private void initializeNodes() {
         tableColumnId.setCellValueFactory(new PropertyValueFactory<>("id"));
         tableColumnName.setCellValueFactory(new PropertyValueFactory<>("name"));
+        tableColumnEmail.setCellValueFactory(new PropertyValueFactory<>("email"));
+
+        tableColumnBirthDate.setCellValueFactory(new PropertyValueFactory<>("birthDate"));
+        TableColumnUtils.formatTableColumnDate(tableColumnBirthDate, "dd/MM/yyyy");
+
+        tableColumnBaseSalary.setCellValueFactory(new PropertyValueFactory<>("baseSalary"));
+        TableColumnUtils.formatTableColumnDouble(tableColumnBaseSalary, 2);
 
         Stage stage = (Stage) MainApplication.getMainScene().getWindow();
         sellerTableView.prefHeightProperty().bind(stage.heightProperty());
