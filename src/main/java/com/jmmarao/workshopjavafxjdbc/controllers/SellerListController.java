@@ -3,7 +3,6 @@ package com.jmmarao.workshopjavafxjdbc.controllers;
 import com.jmmarao.workshopjavafxjdbc.MainApplication;
 import com.jmmarao.workshopjavafxjdbc.exceptions.DbException;
 import com.jmmarao.workshopjavafxjdbc.listeners.DataChangeListener;
-import com.jmmarao.workshopjavafxjdbc.models.entities.Department;
 import com.jmmarao.workshopjavafxjdbc.models.entities.Seller;
 import com.jmmarao.workshopjavafxjdbc.services.SellerService;
 import com.jmmarao.workshopjavafxjdbc.utils.Alerts;
@@ -14,7 +13,9 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
@@ -22,8 +23,11 @@ import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.Pane;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.Date;
 import java.util.List;
@@ -68,7 +72,7 @@ public class SellerListController implements Initializable, DataChangeListener {
         Stage parentStage = StageUtils.currentStage(event);
         Seller seller = new Seller();
 
-        createDialogForm(seller, "/com/jmmarao/workshopjavafxjdbc/DepartmentForm.fxml", parentStage);
+        createDialogForm(seller, "/com/jmmarao/workshopjavafxjdbc/SellerForm.fxml", parentStage);
     }
 
     @Override
@@ -101,7 +105,7 @@ public class SellerListController implements Initializable, DataChangeListener {
 
                 setGraphic(button);
                 button.setOnAction(event ->
-                        createDialogForm(item, "/com/jmmarao/workshopjavafxjdbc/DepartmentForm.fxml", StageUtils.currentStage(event)));
+                        createDialogForm(item, "/com/jmmarao/workshopjavafxjdbc/SellerForm.fxml", StageUtils.currentStage(event)));
             }
         });
     }
@@ -155,26 +159,26 @@ public class SellerListController implements Initializable, DataChangeListener {
     }
 
     private void createDialogForm(Seller seller, String absoluteName, Stage parentStage) {
-//        try {
-//            FXMLLoader loader = new FXMLLoader(getClass().getResource(absoluteName));
-//            Pane pane = loader.load();
-//
-//            DepartmentFormController formController = loader.getController();
-//            formController.setDepartment(department);
-//            formController.setDepartmentService(new DepartmentService());
-//            formController.subscribeDataChangeListener(this);
-//            formController.updateFormData();
-//
-//            Stage dialogStage = new Stage();
-//            dialogStage.setTitle("Enter Department Data");
-//            dialogStage.setScene(new Scene(pane));
-//            dialogStage.setResizable(false);
-//            dialogStage.initOwner(parentStage);
-//            dialogStage.initModality(Modality.WINDOW_MODAL);
-//            dialogStage.showAndWait();
-//        } catch (IOException e) {
-//            Alerts.showAlert("IO Exception", "Error loading view", e.getMessage(), Alert.AlertType.ERROR);
-//        }
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(absoluteName));
+            Pane pane = loader.load();
+
+            SellerFormController formController = loader.getController();
+            formController.setSeller(seller);
+            formController.setSellerService(new SellerService());
+            formController.subscribeDataChangeListener(this);
+            formController.updateFormData();
+
+            Stage dialogStage = new Stage();
+            dialogStage.setTitle("Enter Seller Data");
+            dialogStage.setScene(new Scene(pane));
+            dialogStage.setResizable(false);
+            dialogStage.initOwner(parentStage);
+            dialogStage.initModality(Modality.WINDOW_MODAL);
+            dialogStage.showAndWait();
+        } catch (IOException e) {
+            Alerts.showAlert("IO Exception", "Error loading view", e.getMessage(), Alert.AlertType.ERROR);
+        }
     }
 
     private void removeEntity(Seller seller) {
