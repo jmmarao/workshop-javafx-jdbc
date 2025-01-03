@@ -2,22 +2,30 @@ package com.jmmarao.workshopjavafxjdbc.controllers;
 
 import com.jmmarao.workshopjavafxjdbc.exceptions.DbException;
 import com.jmmarao.workshopjavafxjdbc.listeners.DataChangeListener;
+import com.jmmarao.workshopjavafxjdbc.models.entities.Department;
 import com.jmmarao.workshopjavafxjdbc.models.entities.Seller;
 import com.jmmarao.workshopjavafxjdbc.models.exceptions.ValidationException;
+import com.jmmarao.workshopjavafxjdbc.services.DepartmentService;
 import com.jmmarao.workshopjavafxjdbc.services.SellerService;
 import com.jmmarao.workshopjavafxjdbc.utils.Alerts;
 import com.jmmarao.workshopjavafxjdbc.utils.Constraints;
 import com.jmmarao.workshopjavafxjdbc.utils.ParseUtils;
 import com.jmmarao.workshopjavafxjdbc.utils.StageUtils;
 import com.jmmarao.workshopjavafxjdbc.utils.TableColumnUtils;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
+import javafx.util.Callback;
 
 import java.net.URL;
 import java.time.LocalDate;
@@ -34,6 +42,8 @@ public class SellerFormController implements Initializable {
     private Seller seller;
 
     private SellerService sellerService;
+
+    private DepartmentService departmentService;
 
     private List<DataChangeListener> dataChangeListeners = new ArrayList<>();
 
@@ -53,6 +63,9 @@ public class SellerFormController implements Initializable {
     private TextField txtBaseSalary;
 
     @FXML
+    private ComboBox<Department> comboBoxDepartment;
+
+    @FXML
     private Label labelErrorName;
 
     @FXML
@@ -69,6 +82,8 @@ public class SellerFormController implements Initializable {
 
     @FXML
     private Button btCancel;
+
+    private ObservableList<Department> observableListDepartment;
 
     @FXML
     public void onBtSaveAction(ActionEvent event) {
@@ -114,6 +129,23 @@ public class SellerFormController implements Initializable {
         }
 
         txtBaseSalary.setText(String.format("%.2f", seller.getBaseSalary()));
+
+        if (seller.getDepartment() == null) {
+            comboBoxDepartment.getSelectionModel().selectFirst();
+        } else {
+            comboBoxDepartment.setValue(seller.getDepartment());
+        }
+    }
+
+    public void loadAssociatedObjects() {
+
+        if (departmentService == null) {
+            throw new IllegalStateException("Department service was null");
+        }
+
+        List<Department> departments = departmentService.findAll();
+        observableListDepartment = FXCollections.observableArrayList(departments);
+        comboBoxDepartment.setItems(observableListDepartment);
     }
 
     public void subscribeDataChangeListener(DataChangeListener listener) {
@@ -132,6 +164,7 @@ public class SellerFormController implements Initializable {
         Constraints.setTextFieldMaxLength(txtEmail, 60);
         TableColumnUtils.formatDatePicker(datePickerBirthDate, "dd/MM/yyyy");
         Constraints.setTextFieldDouble(txtBaseSalary);
+        initializeComboBoxDepartment();
     }
 
     private Seller getFormData() {
@@ -157,8 +190,9 @@ public class SellerFormController implements Initializable {
         this.seller = seller;
     }
 
-    public void setSellerService(SellerService sellerService) {
+    public void setServices(SellerService sellerService, DepartmentService departmentService) {
         this.sellerService = sellerService;
+        this.departmentService = departmentService;
     }
 
     private void setErrorMessages(Map<String, String> errors) {
@@ -167,5 +201,19 @@ public class SellerFormController implements Initializable {
         if (fields.contains("name")) {
             labelErrorName.setText(errors.get("name"));
         }
+    }
+
+    private void initializeComboBoxDepartment() {
+        Callback<ListView<Department>, ListCell<Department>> factory = lv -> new ListCell<Department>() {
+
+            @Override
+            protected void updateItem(Department item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(empty ? "" : item.getName());
+            }
+        };
+
+        comboBoxDepartment.setCellFactory(factory);
+        comboBoxDepartment.setButtonCell(factory.call(null));
     }
 }
