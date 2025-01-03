@@ -12,6 +12,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -218,7 +219,7 @@ public class SellerDAOJDBC implements SellerDAO {
                 resultSet.getInt("Id"),
                 resultSet.getString("Name"),
                 resultSet.getString("Email"),
-                resultSet.getDate("BirthDate"),
+                new Date(resultSet.getTimestamp("BirthDate").getTime()),
                 resultSet.getDouble("BaseSalary"),
                 department
         );

@@ -9,17 +9,22 @@ import com.jmmarao.workshopjavafxjdbc.utils.Alerts;
 import com.jmmarao.workshopjavafxjdbc.utils.Constraints;
 import com.jmmarao.workshopjavafxjdbc.utils.ParseUtils;
 import com.jmmarao.workshopjavafxjdbc.utils.StageUtils;
+import com.jmmarao.workshopjavafxjdbc.utils.TableColumnUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 
 import java.net.URL;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.Set;
@@ -39,7 +44,25 @@ public class SellerFormController implements Initializable {
     private TextField txtName;
 
     @FXML
+    private TextField txtEmail;
+
+    @FXML
+    private DatePicker datePickerBirthDate;
+
+    @FXML
+    private TextField txtBaseSalary;
+
+    @FXML
     private Label labelErrorName;
+
+    @FXML
+    private Label labelErrorEmail;
+
+    @FXML
+    private Label labelErrorBirthDate;
+
+    @FXML
+    private Label labelErrorBaseSalary;
 
     @FXML
     private Button btSave;
@@ -82,6 +105,15 @@ public class SellerFormController implements Initializable {
 
         txtId.setText(String.valueOf(seller.getId()));
         txtName.setText(String.valueOf(seller.getName()));
+        txtEmail.setText(String.valueOf(seller.getEmail()));
+
+        Locale.setDefault(Locale.US);
+
+        if (seller.getBirthDate() != null) {
+            datePickerBirthDate.setValue(LocalDate.ofInstant(seller.getBirthDate().toInstant(), ZoneId.systemDefault()));
+        }
+
+        txtBaseSalary.setText(String.format("%.2f", seller.getBaseSalary()));
     }
 
     public void subscribeDataChangeListener(DataChangeListener listener) {
@@ -96,7 +128,10 @@ public class SellerFormController implements Initializable {
 
     private void initializeNodes() {
         Constraints.setTextFieldInteger(txtId);
-        Constraints.setTextFieldMaxLength(txtName, 30);
+        Constraints.setTextFieldMaxLength(txtName, 70);
+        Constraints.setTextFieldMaxLength(txtEmail, 60);
+        TableColumnUtils.formatDatePicker(datePickerBirthDate, "dd/MM/yyyy");
+        Constraints.setTextFieldDouble(txtBaseSalary);
     }
 
     private Seller getFormData() {
