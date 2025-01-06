@@ -9,4 +9,12 @@ public class ParseUtils {
             return null;
         }
     }
+
+    public static Double tryParseStringToDouble(String string) {
+        try {
+            return Double.parseDouble(string);
+        } catch (NumberFormatException e) {
+            return null;
+        }
+    }
 }
